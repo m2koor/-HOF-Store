@@ -2,193 +2,217 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Home of Fabric — Luxury in Every Thread.">
-  <title>HOF | Home of Fabric</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="Home of Fabric — premium fabrics and refined men's style. Luxury in Every Thread.">
+  <title>Home of Fabric | Luxury in Every Thread</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
-  <script defer src="store.js"></script>
+  <script src="store.js" defer></script>
 </head>
 
 <body>
 
-<header class="site-header">
-  <a class="brand" href="index.html">
-    HOF
-    <span>HOME OF FABRIC</span>
-  </a>
-
-  <nav>
-    <a href="#collections">COLLECTIONS</a>
-    <a href="#about">ABOUT</a>
-    <a href="admin.html">ADMIN</a>
-  </nav>
-
-  <a class="header-cta" href="https://wa.me/2348087674813">
-    CONTACT ↗
-  </a>
-</header>
-
-<main>
-
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <div>
-      <p class="eyebrow">HOME OF FABRIC · KANO, NIGERIA</p>
-
-      <h1>
-        Luxury in<br>
-        <em>Every Thread.</em>
-      </h1>
-
-      <p class="hero-text">
-        A considered collection of premium fabrics and refined essentials
-        for the distinguished gentleman.
-      </p>
-
-      <a class="button button-light" href="#collections">
-        EXPLORE COLLECTION
-      </a>
-    </div>
-
-    <div class="hero-mark">
-      <span>HOF</span>
-      <i>EST. FOR DISTINCTION</i>
-    </div>
-  </section>
-
-  <!-- INTRODUCTION -->
-  <div class="intro-strip">
-    <span>QUALITY</span>
-    <b>—</b>
-    <span>CRAFTSMANSHIP</span>
-    <b>—</b>
-    <span>TIMELESS STYLE</span>
-  </div>
-
-  <!-- COLLECTIONS -->
-  <section id="collections" class="section">
-
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">THE HOF EDIT</p>
-        <h2>Our Collections</h2>
-      </div>
-
-      <p>
-        Discover fabrics selected for quality, texture and distinction.
-      </p>
-    </div>
-
-    <div class="catalogue-controls">
-      <div id="category-chips" class="chips"></div>
-
-      <label class="search">
-        ⌕
-        <input
-          id="search"
-          type="search"
-          placeholder="Search collection..."
-          aria-label="Search products"
-        >
-      </label>
-    </div>
-
-    <p id="catalogue-status" class="status" role="status">
-      Loading the HOF collection…
-    </p>
-
-    <div id="product-grid" class="product-grid"></div>
-
-  </section>
-
-  <!-- FOUNDER / ABOUT SECTION -->
-  <section id="about" class="about-section">
-
-    <div class="founder-image">
-      <img
-        src="IMG_8600.jpeg"
-        alt="Usman Muhammad Tukur, Founder and CEO of Home of Fabric"
-        loading="lazy"
-      >
-    </div>
-
-    <div class="founder-content">
-
-      <p class="eyebrow">MEET THE FOUNDER</p>
-
-      <h2>Usman Muhammad Tukur</h2>
-
-      <h3>Founder & CEO — Home of Fabric</h3>
-
-      <p>
-        Home of Fabric was built on a commitment to quality,
-        elegance and trust. Our vision is to provide distinguished
-        fabrics and exceptional service to customers who appreciate
-        style and excellence.
-      </p>
-
-      <strong>HOME OF FABRIC</strong>
-
-      <p class="founder-tagline">
-        Luxury in Every Thread.
-      </p>
-
-    </div>
-
-  </section>
-
-  <!-- CONTACT SECTION -->
-  <section class="contact-band">
-
-    <p class="eyebrow">
-      PERSONAL SERVICE · WORLDWIDE ENQUIRIES
-    </p>
-
-    <h2>
-      Find your next<br>
-      <em>signature fabric.</em>
-    </h2>
-
-    <a class="button button-dark" href="https://wa.me/2348087674813">
-      CHAT WITH HOF ↗
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Home of Fabric home">
+      <span class="brand-monogram">HOF</span>
+      <span class="brand-name">HOME OF FABRIC</span>
     </a>
 
-  </section>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#collections">Collections</a>
+      <a href="#about">Our Story</a>
+      <a href="admin.html">Admin</a>
+    </nav>
 
-</main>
+    <a class="header-contact" href="https://wa.me/2348087674813" target="_blank" rel="noopener">
+      ENQUIRE <span>↗</span>
+    </a>
+  </header>
 
-<!-- FOOTER -->
-<footer class="site-footer">
+  <main id="top">
 
-  <a class="brand brand-footer">
-    HOF
-    <span>HOME OF FABRIC</span>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> THE HOF COLLECTION</p>
+
+        <h1 id="hero-title">
+          Luxury in<br>
+          <em>Every Thread.</em>
+        </h1>
+
+        <p class="hero-text">
+          A considered selection of premium fabrics, chosen for those who appreciate quality, character and timeless style.
+        </p>
+
+        <a class="primary-link" href="#collections">
+          EXPLORE THE COLLECTION <span>↗</span>
+        </a>
+      </div>
+
+      <div class="hero-mark" aria-hidden="true">
+        <span class="hero-mark-top">HOF</span>
+        <span class="hero-mark-rule"></span>
+        <span class="hero-mark-bottom">
+          HOME OF FABRIC<br>
+          KANO · NIGERIA
+        </span>
+      </div>
+
+      <div class="hero-index" aria-hidden="true">01 — 03</div>
+    </section>
+
+    <div class="intro-strip" aria-label="Our values">
+      <span>QUALITY</span>
+      <i></i>
+      <span>CRAFTSMANSHIP</span>
+      <i></i>
+      <span>TIMELESS STYLE</span>
+    </div>
+
+    <section id="collections" class="section collection-section">
+
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">CURATED FOR DISTINCTION</p>
+          <h2>The Collection<span>.</span></h2>
+        </div>
+
+        <p class="section-note">
+          Explore fabrics selected to bring<br>
+          your personal style to life.
+        </p>
+      </div>
+
+      <div class="catalogue-controls">
+        <div id="category-chips" class="chips" aria-label="Filter by category"></div>
+
+        <label class="search-wrap">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input
+            id="search"
+            class="search"
+            type="search"
+            placeholder="Search the collection…"
+            aria-label="Search products"
+          >
+        </label>
+      </div>
+
+      <p id="catalogue-status" class="status" aria-live="polite">
+        Loading the HOF collection…
+      </p>
+
+      <div id="product-grid" class="product-grid"></div>
+
+    </section>
+
+    <section id="about" class="about-section">
+
+      <div class="founder-image">
+        <img
+          src="IMG_8600.jpeg"
+          alt="Usman Muhammad Tukur, Founder of Home of Fabric"
+          loading="lazy"
+        >
+        <span class="image-caption">THE FOUNDER · HOF</span>
+      </div>
+
+      <div class="founder-content">
+        <p class="eyebrow">THE STORY BEHIND HOF</p>
+
+        <h2>
+          Built on quality.<br>
+          <em>Defined by detail.</em>
+        </h2>
+
+        <p class="founder-lead">
+          Home of Fabric is guided by a simple belief: what you wear should reflect the standard you set for yourself.
+        </p>
+
+        <p>
+          We bring together carefully selected fabrics for individuals who value quality, confidence and timeless elegance. Every choice is made with attention to the feel, finish and character of the material.
+        </p>
+
+        <div class="founder-signature">
+          <span class="signature-name">Usman Muhammad Tukur</span>
+          <span>FOUNDER &amp; CEO — HOME OF FABRIC</span>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="contact-band">
+      <p class="eyebrow">PERSONAL SERVICE. DISTINCTIVE STYLE.</p>
+
+      <h2>
+        Let’s find the right fabric<br>
+        <em>for your next look.</em>
+      </h2>
+
+      <a
+        href="https://wa.me/2348087674813"
+        target="_blank"
+        rel="noopener"
+        class="contact-button"
+      >
+        CHAT WITH HOF <span>↗</span>
+      </a>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+
+    <div class="footer-main">
+
+      <a class="brand footer-brand" href="#top" aria-label="Home of Fabric home">
+        <span class="brand-monogram">HOF</span>
+        <span class="brand-name">HOME OF FABRIC</span>
+      </a>
+
+      <p class="footer-tagline">Luxury in Every Thread.</p>
+
+      <div class="footer-contact">
+        <span>KWARI MARKET · KANO STATE, NIGERIA</span>
+
+        <a href="https://wa.me/2348087674813" target="_blank" rel="noopener">
+          WHATSAPP +234 808 767 4813
+        </a>
+
+        <a href="tel:+2348169002104">
+          CALL +234 816 900 2104
+        </a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>
+        © <span id="year"></span> HOME OF FABRIC. ALL RIGHTS RESERVED.
+      </span>
+
+      <a href="#top">BACK TO TOP ↑</a>
+    </div>
+
+  </footer>
+
+  <a
+    class="whatsapp-float"
+    href="https://wa.me/2348087674813"
+    target="_blank"
+    rel="noopener"
+    aria-label="Chat with Home of Fabric on WhatsApp"
+  >
+    <span>W</span>
   </a>
-
-  <p>Luxury in Every Thread.</p>
-
-  <p>Kwari Market, Kano State, Nigeria</p>
-
-  <p>
-    Chat: +234 808 767 4813 · Calls: 08169002104
-  </p>
-
-  <small>
-    © <span id="year"></span> HOME OF FABRIC. ALL RIGHTS RESERVED.
-  </small>
-
-</footer>
-
-<a class="whatsapp-float" href="https://wa.me/2348087674813">
-  WA
-</a>
 
 </body>
 </html>
