@@ -72,88 +72,68 @@ a{color:inherit;text-decoration:none}
 
 /* ABOUT AND FOUNDER SECTION */
 
-.about-section{
-  background:#f4f4f2;
-  padding:75px 10%;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:45px;
-  align-items:center;
+.about {
+  background: #f4f4f2;
+  padding: 75px 10%;
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: 55px;
+  align-items: center;
 }
 
-.founder-image{
-  width:100%;
-  max-width:340px;
-  height:480px;
-  margin:0 auto;
-  background:#e9e9e9;
-  overflow:hidden;
+.about-media {
+  width: 100%;
+  max-width: 340px;
+  height: 480px;
+  margin: 0 auto;
+  overflow: hidden;
+  background: #e9e9e9;
 }
 
-.founder-image img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center top;
-  display:block;
+.about-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
 }
 
-.founder-content h2{
-  font:500 clamp(35px,5vw,55px)/1.1 "Playfair Display",serif;
-  margin:18px 0;
+.about-copy h2 {
+  font: 500 clamp(35px, 5vw, 55px)/1.1 "Playfair Display", serif;
+  margin: 18px 0;
 }
 
-.founder-content h3{
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-  margin:15px 0 22px;
+.about-copy h3 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin: 15px 0 22px;
 }
 
-.founder-content>p:not(.eyebrow){
-  color:#666;
-  font-size:14px;
-  line-height:2;
+.about-copy > p {
+  color: #666;
+  font-size: 14px;
+  line-height: 2;
 }
 
-.founder-content strong{
-  display:block;
-  margin-top:25px;
-  font-size:11px;
-  letter-spacing:3px;
+@media (max-width: 760px) {
+  .about {
+    padding: 55px 8%;
+    gap: 30px;
+  }
 }
 
-.founder-content .founder-tagline{
-  font-size:11px;
-  letter-spacing:2px;
-  color:#888;
-  margin-top:8px;
-}
+@media (max-width: 520px) {
+  .about {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
 
-.contact-band{text-align:center;padding:85px 20px}
-.contact-band h2{font-size:clamp(42px,6vw,68px)}
-
-.site-footer{background:#111;color:white;text-align:center;padding:42px 20px}
-.site-footer p{font-size:11px;color:#aaa;line-height:1.7}
-.site-footer small{font-size:8px;letter-spacing:1.4px;color:#888}
-.brand-footer{align-items:center}
-
-.whatsapp-float{
-  position:fixed;
-  right:20px;
-  bottom:20px;
-  background:#111;
-  color:white;
-  border:1px solid white;
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  font-size:10px;
-  font-weight:700;
-  z-index:10;
+  .about-media {
+    max-width: 300px;
+    height: 420px;
+  }
 }
 
 /* PRODUCT DETAILS MODAL */
