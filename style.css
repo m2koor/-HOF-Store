@@ -973,3 +973,23 @@ input {
     animation-duration: .01ms !important;
   }
 }
+@media (max-width: 640px) {
+  .main-nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .main-nav a:not([href="admin.html"]) {
+    display: none;
+  }
+
+  .main-nav a[href="admin.html"] {
+    display: inline-block;
+    padding: 11px 13px;
+    border: 1px solid #111;
+    font-size: 9px;
+    color: #111;
+    white-space: nowrap;
+  }
+}
