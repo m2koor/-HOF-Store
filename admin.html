@@ -3,25 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111111">
 
   <title>HOF | Admin Dashboard</title>
 
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
 
+  <!-- Admin Stylesheet -->
   <link rel="stylesheet" href="admin.css">
 
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Supabase Configuration -->
   <script src="config.js"></script>
+
+  <!-- Admin JavaScript -->
   <script defer src="admin.js"></script>
 </head>
 
 <body class="admin-page">
 
+  <!-- HEADER -->
   <header class="admin-header">
-    <a class="admin-brand" href="index.html">
+
+    <a class="admin-brand" href="index.html" aria-label="HOF Home of Fabric">
       <span class="admin-brand-mark">HOF</span>
       <span class="admin-brand-name">HOME OF FABRIC</span>
     </a>
@@ -29,8 +42,11 @@
     <a class="view-store" href="index.html">
       VIEW STORE ↗
     </a>
+
   </header>
 
+
+  <!-- MAIN CONTENT -->
   <main class="admin-wrap">
 
     <!-- ADMIN LOGIN -->
@@ -47,18 +63,22 @@
       <form id="login-form" class="admin-form">
 
         <label for="email">Email</label>
+
         <input
           id="email"
           type="email"
           autocomplete="username"
+          placeholder="Enter your email"
           required
         >
 
         <label for="password">Password</label>
+
         <input
           id="password"
           type="password"
           autocomplete="current-password"
+          placeholder="Enter your password"
           required
         >
 
@@ -72,25 +92,39 @@
 
       </form>
 
-      <p id="login-message" class="status" role="status"></p>
+      <p
+        id="login-message"
+        class="status"
+        role="status"
+        aria-live="polite"
+      ></p>
 
     </section>
+
 
     <!-- ADMIN DASHBOARD -->
     <section id="dashboard" class="hidden">
 
+      <!-- DASHBOARD HEADING -->
       <div class="admin-title">
+
         <div>
           <p class="eyebrow">PRIVATE MANAGEMENT</p>
           <h1>Product Dashboard</h1>
         </div>
 
-        <button id="logout" class="outline-button" type="button">
+        <button
+          id="logout"
+          class="outline-button"
+          type="button"
+        >
           SIGN OUT
         </button>
+
       </div>
 
-      <!-- ADD PRODUCT -->
+
+      <!-- ADD / EDIT PRODUCT -->
       <section class="admin-panel">
 
         <h2 id="form-title">Add a Product</h2>
@@ -101,61 +135,113 @@
 
           <div class="form-grid">
 
+            <!-- PRODUCT NAME -->
             <div class="field">
+
               <label for="name">Product Name</label>
+
               <input
                 id="name"
+                type="text"
                 maxlength="120"
+                placeholder="Enter product name"
                 required
               >
+
             </div>
 
+
+            <!-- PRICE -->
             <div class="field">
+
               <label for="price">Price (₦)</label>
+
               <input
                 id="price"
                 type="number"
                 min="0"
                 step="0.01"
+                placeholder="Enter price"
                 required
               >
+
             </div>
 
+
+            <!-- PRODUCT CATEGORY -->
             <div class="field">
+
               <label for="category">Category</label>
+
               <select id="category" required>
+
                 <option value="">Choose category</option>
-                <option>Luxury Lace</option>
-                <option>Swiss Voile</option>
-                <option>Atiku</option>
-                <option>Getzner</option>
-                <option>Shadda</option>
-                <option>Wagambari</option>
-                <option>Voil</option>
-                <option>Senator Materials</option>
-                <option>Men's Caps</option>
-                <option>Accessories</option>
-                <option>Other Fabrics</option>
+
+                <option value="Men Lace">Men Lace</option>
+
+                <option value="Swiss Collection">Swiss Collection</option>
+
+                <option value="Filtex/Atiku Collection">
+                  Filtex/Atiku Collection
+                </option>
+
+                <option value="Getzner">Getzner</option>
+
+                <option value="Shadda">Shadda</option>
+
+                <option value="Wagambari">Wagambari</option>
+
+                <option value="Wool Collection">Wool Collection</option>
+
+                <option value="VIP Collection">VIP Collection</option>
+
+                <option value="Men's Caps">Men's Caps</option>
+
+                <option value="Men Shoes">Men Shoes</option>
+
+                <option value="Fabrics">Fabrics</option>
+
               </select>
+
             </div>
 
+
+            <!-- PRICE UNIT -->
             <div class="field">
+
               <label for="unit">Price Unit</label>
+
               <select id="unit">
+
                 <option value="yard">Per yard</option>
                 <option value="set">Per set</option>
                 <option value="piece">Per piece</option>
                 <option value="item">Per item</option>
+
               </select>
+
             </div>
 
+
+            <!-- DESCRIPTION -->
             <div class="field full">
+
               <label for="description">Description</label>
-              <textarea id="description" rows="4"></textarea>
+
+              <textarea
+                id="description"
+                rows="4"
+                placeholder="Enter product description"
+              ></textarea>
+
             </div>
 
+
+            <!-- PRODUCT PHOTOS -->
             <div class="field full">
+
               <label for="images">Product Photos</label>
+
               <input
                 id="images"
                 type="file"
@@ -167,24 +253,36 @@
                 New photos are added to existing photos when editing.
                 Maximum 10 MB each.
               </small>
+
             </div>
 
           </div>
 
+
+          <!-- AVAILABILITY -->
           <div class="checks">
 
-            <label>
-              <input id="available" type="checkbox" checked>
+            <label for="available">
+              <input
+                id="available"
+                type="checkbox"
+                checked
+              >
               Available
             </label>
 
-            <label>
-              <input id="new-arrival" type="checkbox">
+            <label for="new-arrival">
+              <input
+                id="new-arrival"
+                type="checkbox"
+              >
               New Arrival
             </label>
 
           </div>
 
+
+          <!-- FORM ACTIONS -->
           <div class="admin-actions">
 
             <button
@@ -207,24 +305,41 @@
 
         </form>
 
-        <p id="form-message" class="status" role="status"></p>
+        <p
+          id="form-message"
+          class="status"
+          role="status"
+          aria-live="polite"
+        ></p>
 
       </section>
+
 
       <!-- PRODUCT CATALOGUE -->
       <section class="admin-panel">
 
         <div class="admin-title">
+
           <h2>Your Catalogue</h2>
 
-          <button id="refresh" class="outline-button" type="button">
+          <button
+            id="refresh"
+            class="outline-button"
+            type="button"
+          >
             REFRESH
           </button>
+
         </div>
 
         <div id="product-list" class="admin-products"></div>
 
-        <p id="list-message" class="status" role="status"></p>
+        <p
+          id="list-message"
+          class="status"
+          role="status"
+          aria-live="polite"
+        ></p>
 
       </section>
 
@@ -232,9 +347,14 @@
 
   </main>
 
+
+  <!-- FOOTER -->
   <footer class="admin-footer">
+
     HOF · HOME OF FABRIC
+
     <span>Luxury in Every Thread</span>
+
   </footer>
 
 </body>
