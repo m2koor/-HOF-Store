@@ -1,9 +1,9 @@
-/* HOME OF FABRIC — EDITORIAL LUXURY */
+/* HOME OF FABRIC — LUXURY EDITORIAL STOREFRONT */
 
 :root {
   --ink: #111;
   --paper: #fff;
-  --soft: #f3f3f1;
+  --soft: #f4f4f2;
   --line: #e5e5e2;
   --muted: #777;
   --serif: "Playfair Display", Georgia, serif;
@@ -16,6 +16,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 30px;
 }
 
 body {
@@ -24,6 +25,10 @@ body {
   color: var(--ink);
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
 }
 
 a {
@@ -35,9 +40,22 @@ input {
   font: inherit;
 }
 
+button {
+  color: inherit;
+}
+
 ::selection {
-  background: #111;
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ACCESSIBILITY */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
 }
 
 /* HEADER */
@@ -50,7 +68,9 @@ input {
   justify-content: space-between;
   gap: 28px;
   border-bottom: 1px solid var(--line);
-  background: #fff;
+  background: var(--paper);
+  position: relative;
+  z-index: 10;
 }
 
 .brand {
@@ -69,6 +89,12 @@ input {
   border: 1px solid var(--ink);
   font: 17px var(--serif);
   letter-spacing: -1px;
+  transition: background .25s, color .25s;
+}
+
+.brand:hover .brand-monogram {
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .brand-name {
@@ -94,16 +120,23 @@ input {
 
 .main-nav a {
   color: #555;
+  transition: color .2s;
 }
 
 .main-nav a:hover {
-  color: #000;
+  color: var(--ink);
 }
 
 .header-contact {
   border: 1px solid var(--ink);
   padding: 14px 18px;
   white-space: nowrap;
+  transition: background .2s, color .2s;
+}
+
+.header-contact:hover {
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .header-contact span,
@@ -135,6 +168,7 @@ input {
   right: 8%;
   top: 50%;
   transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .hero-copy {
@@ -162,7 +196,7 @@ input {
   display: inline-block;
   width: 27px;
   height: 1px;
-  background: #111;
+  background: var(--ink);
 }
 
 .hero h1,
@@ -200,12 +234,12 @@ input {
   align-items: center;
   text-decoration: none;
   background: var(--ink);
-  color: #fff;
+  color: var(--paper);
   padding: 17px 22px;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 1.7px;
-  transition: background .2s, transform .2s;
+  transition: background .2s, color .2s, transform .2s;
 }
 
 .primary-link:hover,
@@ -347,8 +381,8 @@ input {
 
 .chip:hover,
 .chip.active {
-  border-color: #111;
-  color: #111;
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .search-wrap {
@@ -373,7 +407,7 @@ input {
   outline: 0;
   background: transparent;
   font-size: 11px;
-  color: #111;
+  color: var(--ink);
 }
 
 .search::placeholder {
@@ -398,12 +432,12 @@ input {
 
 .product-card {
   min-width: 0;
-  background: #fff;
+  background: var(--paper);
   cursor: pointer;
 }
 
 .product-card:focus-visible {
-  outline: 2px solid #111;
+  outline: 2px solid var(--ink);
   outline-offset: 4px;
 }
 
@@ -431,8 +465,8 @@ input {
   top: 14px;
   left: 14px;
   padding: 8px 10px;
-  background: #111;
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 1.2px;
@@ -509,7 +543,7 @@ input {
   position: absolute;
   bottom: 22px;
   left: 25px;
-  color: #fff;
+  color: var(--paper);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -564,8 +598,8 @@ input {
 .contact-band {
   padding: 105px 24px;
   text-align: center;
-  background: #111;
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
 }
 
 .contact-band .eyebrow {
@@ -579,20 +613,21 @@ input {
 
 .contact-button {
   margin-top: 32px;
-  border: 1px solid #fff;
-  background: #fff;
-  color: #111;
+  border: 1px solid var(--paper);
+  background: var(--paper);
+  color: var(--ink);
 }
 
 .contact-button:hover {
   background: #ddd;
+  color: var(--ink);
 }
 
 /* FOOTER */
 
 .site-footer {
   padding: 55px clamp(22px, 7vw, 100px) 22px;
-  background: #fff;
+  background: var(--paper);
 }
 
 .footer-main {
@@ -630,7 +665,7 @@ input {
 }
 
 .footer-contact a:hover {
-  color: #111;
+  color: var(--ink);
 }
 
 .footer-bottom {
@@ -660,10 +695,10 @@ input {
   height: 52px;
   display: grid;
   place-items: center;
-  border: 1px solid #fff;
+  border: 1px solid var(--paper);
   border-radius: 50%;
-  background: #111;
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
   text-decoration: none;
   font-size: 17px;
   font-weight: 700;
@@ -750,7 +785,22 @@ input {
   }
 
   .main-nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .main-nav a:not([href="admin.html"]) {
     display: none;
+  }
+
+  .main-nav a[href="admin.html"] {
+    display: inline-block;
+    padding: 11px 13px;
+    border: 1px solid var(--ink);
+    font-size: 9px;
+    color: var(--ink);
+    white-space: nowrap;
   }
 
   .header-contact {
@@ -962,6 +1012,40 @@ input {
   }
 }
 
+/* SMALL MOBILE */
+
+@media (max-width: 380px) {
+  .site-header {
+    padding: 0 12px;
+    gap: 7px;
+  }
+
+  .brand-name {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+
+  .header-contact {
+    padding: 10px 9px;
+    font-size: 7px;
+  }
+
+  .main-nav a[href="admin.html"] {
+    padding: 10px 9px;
+    font-size: 8px;
+  }
+
+  .hero h1 {
+    font-size: 56px;
+  }
+
+  .intro-strip {
+    gap: 8px;
+    font-size: 6px;
+    letter-spacing: .8px;
+  }
+}
+
 /* REDUCED MOTION */
 
 @media (prefers-reduced-motion: reduce) {
@@ -971,25 +1055,5 @@ input {
     scroll-behavior: auto !important;
     transition-duration: .01ms !important;
     animation-duration: .01ms !important;
-  }
-}
-@media (max-width: 640px) {
-  .main-nav {
-    display: flex;
-    align-items: center;
-    gap: 0;
-  }
-
-  .main-nav a:not([href="admin.html"]) {
-    display: none;
-  }
-
-  .main-nav a[href="admin.html"] {
-    display: inline-block;
-    padding: 11px 13px;
-    border: 1px solid #111;
-    font-size: 9px;
-    color: #111;
-    white-space: nowrap;
   }
 }
