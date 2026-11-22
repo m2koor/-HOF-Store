@@ -7,6 +7,9 @@
   let rows = [];
   let category = 'All';
   let zoomLevel = 1;
+  let currentImages = [];
+  let currentImageIndex = 0;
+  let currentProductName = '';
 
   $('year').textContent = new Date().getFullYear();
 
@@ -23,6 +26,7 @@
   const naira = n => '₦' + Number(n || 0).toLocaleString('en-NG');
 
   // PRODUCT AND IMAGE VIEWER STYLES
+
   const modalStyle = document.createElement('style');
 
   modalStyle.textContent = `
@@ -83,11 +87,18 @@
 
     .hof-modal-thumbs button {
       padding: 0;
-      border: 1px solid #ddd;
+      border: 2px solid #ddd;
       background: white;
       cursor: pointer;
       flex: 0 0 65px;
       height: 65px;
+      opacity: .65;
+      transition: .2s ease;
+    }
+
+    .hof-modal-thumbs button.active {
+      border: 2px solid #111;
+      opacity: 1;
     }
 
     .hof-modal-thumbs img {
@@ -190,9 +201,11 @@
       left: 15px;
       display: flex;
       gap: 7px;
+      align-items: center;
     }
 
-    .hof-lightbox-controls button {
+    .hof-lightbox-controls button,
+    .hof-lightbox-nav {
       min-width: 44px;
       height: 44px;
       padding: 0 12px;
@@ -211,6 +224,32 @@
       text-align: center;
     }
 
+    .hof-lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 46px;
+      height: 54px;
+      font-size: 25px;
+      background: rgba(35,35,35,.85);
+    }
+
+    .hof-lightbox-prev { left: 12px; }
+    .hof-lightbox-next { right: 12px; }
+
+    .hof-lightbox-counter {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 13px;
+      letter-spacing: 1px;
+      background: rgba(0,0,0,.55);
+      padding: 8px 14px;
+    }
+
     @media(max-width:600px) {
       .hof-modal-main-image {
         height: 55vh;
@@ -222,6 +261,23 @@
       .hof-lightbox {
         padding: 70px 8px 15px;
       }
+
+      .hof-lightbox-nav {
+        width: 38px;
+        height: 46px;
+      }
+
+      .hof-lightbox-prev { left: 5px; }
+      .hof-lightbox-next { right: 5px; }
+
+      .hof-lightbox-controls { left: 8px; gap: 4px; }
+
+      .hof-lightbox-controls button {
+        min-width: 38px;
+        padding: 0 8px;
+      }
+
+      .hof-zoom-level { min-width: 38px; }
     }
   `;
 
@@ -276,13 +332,24 @@
       &times;
     </button>
 
+    <button class="hof-lightbox-nav hof-lightbox-prev"
+      type="button" aria-label="Previous image">‹</button>
+
+    <button class="hof-lightbox-nav hof-lightbox-next"
+      type="button" aria-label="Next image">›</button>
+
     <img class="hof-lightbox-image" alt="">
+
+    <span class="hof-lightbox-counter"></span>
   `;
 
   document.body.append(lightbox);
 
   const lightboxImage = lightbox.querySelector('.hof-lightbox-image');
   const zoomText = lightbox.querySelector('.hof-zoom-level');
+  const counter = lightbox.querySelector('.hof-lightbox-counter');
+  const previousButton = lightbox.querySelector('.hof-lightbox-prev');
+  const nextButton = lightbox.querySelector('.hof-lightbox-next');
 
   function updateZoom() {
     lightboxImage.style.transform = `scale(${zoomLevel})`;
@@ -295,13 +362,27 @@
     updateZoom();
   }
 
-  function openLightbox(src, alt) {
-    if (!src) return;
+  function updateLightboxImage() {
+    if (!currentImages.length) return;
 
-    lightboxImage.src = src;
-    lightboxImage.alt = alt || 'HOF product image';
+    lightboxImage.src = currentImages[currentImageIndex];
+    lightboxImage.alt = `${currentProductName} image ${currentImageIndex + 1}`;
+
+    counter.textContent =
+      `${currentImageIndex + 1} / ${currentImages.length}`;
+
+    const multiple = currentImages.length > 1;
+
+    previousButton.style.display = multiple ? 'block' : 'none';
+    nextButton.style.display = multiple ? 'block' : 'none';
 
     setZoom(1);
+  }
+
+  function openLightbox() {
+    if (!currentImages.length) return;
+
+    updateLightboxImage();
 
     lightbox.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -310,7 +391,51 @@
   function closeLightbox() {
     lightbox.classList.remove('open');
     lightboxImage.removeAttribute('src');
-    document.body.style.overflow = modal.classList.contains('open') ? 'hidden' : '';
+    document.body.style.overflow =
+      modal.classList.contains('open') ? 'hidden' : '';
+  }
+
+  function showImage(index) {
+    if (!currentImages.length) return;
+
+    currentImageIndex =
+      (index + currentImages.length) % currentImages.length;
+
+    const mainImage = modal.querySelector('.hof-modal-main-image');
+    const thumbnails = modal.querySelectorAll('.hof-modal-thumbs button');
+
+    mainImage.src = currentImages[currentImageIndex];
+
+    thumbnails.forEach((button, i) => {
+      button.classList.toggle('active', i === currentImageIndex);
+
+      if (i === currentImageIndex) {
+        button.setAttribute('aria-current', 'true');
+        button.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'nearest'
+        });
+      } else {
+        button.removeAttribute('aria-current');
+      }
+    });
+
+    if (lightbox.classList.contains('open')) {
+      updateLightboxImage();
+    }
+  }
+
+  function previousImage() {
+    if (currentImages.length > 1) {
+      showImage(currentImageIndex - 1);
+    }
+  }
+
+  function nextImage() {
+    if (currentImages.length > 1) {
+      showImage(currentImageIndex + 1);
+    }
   }
 
   lightbox.querySelector('[data-zoom="in"]').addEventListener('click', () => {
@@ -325,7 +450,11 @@
     setZoom(1);
   });
 
-  lightbox.querySelector('.hof-lightbox-close').addEventListener('click', closeLightbox);
+  lightbox.querySelector('.hof-lightbox-close')
+    .addEventListener('click', closeLightbox);
+
+  previousButton.addEventListener('click', previousImage);
+  nextButton.addEventListener('click', nextImage);
 
   lightboxImage.addEventListener('click', () => {
     setZoom(zoomLevel > 1 ? 1 : 2);
@@ -335,53 +464,98 @@
     if (e.target === lightbox) closeLightbox();
   });
 
+  // MOBILE SWIPE NAVIGATION
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  lightbox.addEventListener('touchstart', e => {
+    if (!e.touches.length) return;
+
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  lightbox.addEventListener('touchend', e => {
+    if (!e.changedTouches.length || zoomLevel > 1) return;
+
+    const differenceX = e.changedTouches[0].clientX - touchStartX;
+    const differenceY = e.changedTouches[0].clientY - touchStartY;
+
+    if (Math.abs(differenceX) < 50 ||
+        Math.abs(differenceX) < Math.abs(differenceY)) {
+      return;
+    }
+
+    if (differenceX < 0) {
+      nextImage();
+    } else {
+      previousImage();
+    }
+  }, { passive: true });
+
   // PRODUCT MODAL CONTROLS
 
   function closeModal() {
+    if (lightbox.classList.contains('open')) {
+      closeLightbox();
+    }
+
     modal.classList.remove('open');
     document.body.style.overflow = '';
   }
 
-  modal.querySelector('.hof-modal-close').addEventListener('click', closeModal);
+  modal.querySelector('.hof-modal-close')
+    .addEventListener('click', closeModal);
 
   modal.addEventListener('click', e => {
     if (e.target === modal) closeModal();
   });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      if (lightbox.classList.contains('open')) {
+    if (lightbox.classList.contains('open')) {
+      if (e.key === 'Escape') {
         closeLightbox();
-      } else if (modal.classList.contains('open')) {
-        closeModal();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        previousImage();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        nextImage();
       }
+
+    } else if (modal.classList.contains('open') && e.key === 'Escape') {
+      closeModal();
     }
   });
 
   // OPEN PRODUCT DETAILS
 
   function openProduct(p) {
-    const images = Array.isArray(p.images) ? p.images.filter(Boolean) : [];
+    currentImages = Array.isArray(p.images)
+      ? p.images.filter(Boolean)
+      : [];
+
+    currentImageIndex = 0;
+    currentProductName = p.name || 'HOF product';
 
     const mainImage = modal.querySelector('.hof-modal-main-image');
     const thumbs = modal.querySelector('.hof-modal-thumbs');
 
-    mainImage.style.display = images.length ? 'block' : 'none';
-    mainImage.src = images[0] || '';
-    mainImage.alt = p.name || 'HOF product';
+    mainImage.style.display = currentImages.length ? 'block' : 'none';
+    mainImage.src = currentImages[0] || '';
+    mainImage.alt = currentProductName;
 
-    mainImage.onclick = () => {
-      openLightbox(mainImage.src, mainImage.alt);
-    };
+    mainImage.onclick = openLightbox;
 
     thumbs.replaceChildren();
 
-    images.forEach((src, index) => {
+    currentImages.forEach((src, index) => {
       const button = document.createElement('button');
       const image = document.createElement('img');
 
       image.src = src;
-      image.alt = `${p.name} image ${index + 1}`;
+      image.alt = `${currentProductName} image ${index + 1}`;
       image.loading = 'lazy';
 
       button.setAttribute('aria-label', `View image ${index + 1}`);
@@ -389,11 +563,15 @@
       button.append(image);
 
       button.addEventListener('click', () => {
-        mainImage.src = src;
+        showImage(index);
       });
 
       thumbs.append(button);
     });
+
+    if (currentImages.length) {
+      showImage(0);
+    }
 
     modal.querySelector('.hof-modal-category').textContent =
       p.category || 'HOF COLLECTION';
