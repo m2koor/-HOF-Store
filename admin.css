@@ -1,6 +1,6 @@
 /* =========================================
-   HOF — ADMIN DASHBOARD
-   Independent admin styling
+   HOME OF FABRIC — ADMIN DASHBOARD
+   Luxury Editorial | Responsive Design
 ========================================= */
 
 :root {
@@ -8,7 +8,7 @@
   --admin-white: #fff;
   --admin-grey: #777;
   --admin-border: #e5e5e2;
-  --admin-background: #f7f7f5;
+  --admin-background: #f5f5f3;
   --admin-serif: "Playfair Display", Georgia, serif;
   --admin-sans: "DM Sans", Arial, sans-serif;
 }
@@ -38,8 +38,28 @@
   font: inherit;
 }
 
+.admin-page button {
+  cursor: pointer;
+}
+
 .admin-page .hidden {
   display: none !important;
+}
+
+/* ACCESSIBILITY */
+
+.admin-page a:focus-visible,
+.admin-page button:focus-visible,
+.admin-page input:focus-visible,
+.admin-page select:focus-visible,
+.admin-page textarea:focus-visible {
+  outline: 2px solid var(--admin-black);
+  outline-offset: 3px;
+}
+
+.admin-page ::selection {
+  background: var(--admin-black);
+  color: var(--admin-white);
 }
 
 /* HEADER */
@@ -72,11 +92,22 @@
   letter-spacing: 1.5px;
 }
 
+.admin-page .site-header nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
 .admin-page .site-header nav a {
   text-decoration: none;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.2px;
+  transition: opacity .2s;
+}
+
+.admin-page .site-header nav a:hover {
+  opacity: .55;
 }
 
 /* MAIN LAYOUT */
@@ -107,11 +138,13 @@
 .admin-page h1 {
   margin: 10px 0 15px;
   font: 500 clamp(32px, 5vw, 48px)/1.15 var(--admin-serif);
+  letter-spacing: -1px;
 }
 
 .admin-page h2 {
   margin: 0 0 25px;
   font: 500 28px/1.2 var(--admin-serif);
+  letter-spacing: -.5px;
 }
 
 .admin-page .muted {
@@ -150,28 +183,47 @@
   padding: 12px 14px;
   border: 1px solid #d8d8d5;
   border-radius: 0;
-  background: #fff;
-  color: #111;
+  background: var(--admin-white);
+  color: var(--admin-black);
   font-family: var(--admin-sans);
   font-size: 14px;
+  transition: border-color .2s, background .2s;
+}
+
+.admin-page .admin-form input:not([type="checkbox"]):hover,
+.admin-page .admin-form select:hover,
+.admin-page .admin-form textarea:hover {
+  border-color: #999;
 }
 
 .admin-page .admin-form textarea {
   min-height: 110px;
   resize: vertical;
+  line-height: 1.7;
 }
 
 .admin-page .admin-form input:focus,
 .admin-page .admin-form select:focus,
 .admin-page .admin-form textarea:focus {
   outline: none;
-  border-color: #111;
+  border-color: var(--admin-black);
 }
 
 .admin-page .admin-form input[type="file"] {
   padding: 11px;
   background: #fafafa;
   font-size: 12px;
+}
+
+.admin-page .admin-form input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--admin-black);
+  background: var(--admin-black);
+  color: var(--admin-white);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .admin-page .admin-form small {
@@ -208,12 +260,14 @@
   gap: 9px;
   font-size: 12px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .admin-page .checks input {
   width: 17px;
   height: 17px;
-  accent-color: #111;
+  accent-color: var(--admin-black);
+  cursor: pointer;
 }
 
 /* DASHBOARD HEADINGS */
@@ -243,22 +297,34 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.2px;
+  transition: background .2s, color .2s, border-color .2s;
 }
 
 .admin-page .button-dark {
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
+  border: 1px solid var(--admin-black);
+  background: var(--admin-black);
+  color: var(--admin-white);
 }
 
 .admin-page .button-dark:hover {
   background: #444;
+  border-color: #444;
 }
 
 .admin-page .outline-button {
-  border: 1px solid #111;
-  background: #fff;
-  color: #111;
+  border: 1px solid var(--admin-black);
+  background: var(--admin-white);
+  color: var(--admin-black);
+}
+
+.admin-page .outline-button:hover {
+  background: var(--admin-black);
+  color: var(--admin-white);
+}
+
+.admin-page button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
 }
 
 .admin-page .admin-actions {
@@ -275,6 +341,7 @@
   color: var(--admin-grey);
   font-size: 12px;
   line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 
 /* PRODUCT CATALOGUE */
@@ -285,7 +352,12 @@
   gap: 20px;
 }
 
+.admin-page .admin-products > * {
+  min-width: 0;
+}
+
 .admin-page .admin-products img {
+  display: block;
   max-width: 100%;
   height: auto;
   object-fit: cover;
@@ -296,12 +368,20 @@
 .admin-page .site-footer {
   padding: 25px 20px;
   border-top: 1px solid var(--admin-border);
-  background: #fff;
+  background: var(--admin-white);
   color: #555;
   text-align: center;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.5px;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .admin-page .admin-wrap {
+    width: min(100% - 30px, 1050px);
+  }
 }
 
 /* MOBILE */
@@ -322,6 +402,10 @@
     letter-spacing: 1px;
   }
 
+  .admin-page .site-header nav {
+    gap: 10px;
+  }
+
   .admin-page .site-header nav a {
     font-size: 8px;
   }
@@ -333,6 +417,7 @@
 
   .admin-page .admin-panel {
     padding: 20px 16px;
+    margin-bottom: 18px;
   }
 
   .admin-page h1 {
@@ -354,10 +439,12 @@
 
   .admin-page .admin-title {
     align-items: flex-start;
+    flex-direction: column;
   }
 
   .admin-page .admin-actions {
     flex-direction: column;
+    width: 100%;
   }
 
   .admin-page .admin-actions button {
@@ -366,10 +453,51 @@
 
   .admin-page .admin-products {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .admin-page .checks {
+    gap: 17px;
+  }
+
+  .admin-page .admin-form {
+    gap: 15px;
+  }
+
+  .admin-page .admin-form input:not([type="checkbox"]),
+  .admin-page .admin-form select,
+  .admin-page .admin-form textarea {
+    font-size: 16px;
   }
 }
 
-/* ACCESSIBILITY */
+/* SMALL MOBILE */
+
+@media (max-width: 380px) {
+  .admin-page .site-header {
+    padding: 12px 10px;
+    gap: 8px;
+  }
+
+  .admin-page .brand {
+    font-size: 17px;
+  }
+
+  .admin-page .brand span {
+    font-size: 6px;
+    letter-spacing: .7px;
+  }
+
+  .admin-page .site-header nav a {
+    font-size: 7px;
+  }
+
+  .admin-page .admin-wrap {
+    width: calc(100% - 22px);
+  }
+}
+
+/* REDUCED MOTION */
 
 @media (prefers-reduced-motion: reduce) {
   .admin-page *,
