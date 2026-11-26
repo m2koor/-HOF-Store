@@ -51,9 +51,26 @@ button {
 
 /* ACCESSIBILITY */
 
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 15px;
+  z-index: 1000;
+  padding: 12px 18px;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.skip-link:focus {
+  top: 15px;
+}
+
 a:focus-visible,
 button:focus-visible,
-input:focus-visible {
+input:focus-visible,
+.product-card:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 4px;
 }
@@ -436,11 +453,6 @@ input:focus-visible {
   cursor: pointer;
 }
 
-.product-card:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 4px;
-}
-
 .product-image {
   position: relative;
   overflow: hidden;
@@ -742,10 +754,6 @@ input:focus-visible {
     height: 150px;
   }
 
-  .hero-mark-top {
-    font-size: 44px;
-  }
-
   .product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -764,9 +772,12 @@ input:focus-visible {
 
 @media (max-width: 640px) {
   .site-header {
-    min-height: 72px;
-    padding: 0 18px;
-    gap: 12px;
+    min-height: auto;
+    padding: 14px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 13px 10px;
   }
 
   .brand {
@@ -784,28 +795,32 @@ input:focus-visible {
     letter-spacing: 1.4px;
   }
 
-  .main-nav {
-    display: flex;
-    align-items: center;
-    gap: 0;
-  }
-
-  .main-nav a:not([href="admin.html"]) {
-    display: none;
-  }
-
-  .main-nav a[href="admin.html"] {
-    display: inline-block;
-    padding: 11px 13px;
-    border: 1px solid var(--ink);
-    font-size: 9px;
-    color: var(--ink);
-    white-space: nowrap;
-  }
-
   .header-contact {
     padding: 12px 13px;
     font-size: 8px;
+  }
+
+  .main-nav {
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    padding-top: 11px;
+    border-top: 1px solid var(--line);
+  }
+
+  .main-nav a {
+    display: inline-block;
+    padding: 8px 12px;
+    font-size: 8px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .main-nav a + a {
+    border-left: 1px solid var(--line);
   }
 
   .hero {
@@ -1016,8 +1031,8 @@ input:focus-visible {
 
 @media (max-width: 380px) {
   .site-header {
-    padding: 0 12px;
-    gap: 7px;
+    padding: 12px;
+    gap: 10px 7px;
   }
 
   .brand-name {
@@ -1030,9 +1045,10 @@ input:focus-visible {
     font-size: 7px;
   }
 
-  .main-nav a[href="admin.html"] {
-    padding: 10px 9px;
-    font-size: 8px;
+  .main-nav a {
+    padding: 8px 9px;
+    font-size: 7px;
+    letter-spacing: .7px;
   }
 
   .hero h1 {
