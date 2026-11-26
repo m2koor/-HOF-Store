@@ -1,8 +1,16 @@
 (() => {
+  'use strict';
+
   const c = window.HOF_CONFIG || {};
   const $ = id => document.getElementById(id);
+
   const grid = $('product-grid');
   const status = $('catalogue-status');
+
+  if (!grid || !status) {
+    console.error('HOF: Required catalogue elements were not found.');
+    return;
+  }
 
   let rows = [];
   let category = 'All';
@@ -10,26 +18,79 @@
   let currentImages = [];
   let currentImageIndex = 0;
   let currentProductName = '';
+  let lastFocusedElement = null;
+  let lightboxPreviousFocus = null;
 
-  $('year').textContent = new Date().getFullYear();
+  if ($('year')) {
+    $('year').textContent = new Date().getFullYear();
+  }
 
-  if (!window.supabase || !c.SUPABASE_URL || !c.SUPABASE_PUBLISHABLE_KEY) {
+  if (
+    !window.supabase ||
+    !c.SUPABASE_URL ||
+    !c.SUPABASE_PUBLISHABLE_KEY
+  ) {
     status.textContent = 'Catalogue connection is not configured.';
     return;
   }
 
-  const db = window.supabase.createClient(
-    c.SUPABASE_URL,
-    c.SUPABASE_PUBLISHABLE_KEY
-  );
+  let db;
 
-  const naira = n => '₦' + Number(n || 0).toLocaleString('en-NG');
+  try {
+    db = window.supabase.createClient(
+      c.SUPABASE_URL,
+      c.SUPABASE_PUBLISHABLE_KEY
+    );
+  } catch (error) {
+    console.error('HOF Supabase initialization error:', error);
+    status.textContent = 'Unable to connect to our catalogue.';
+    return;
+  }
 
-  // PRODUCT DETAILS AND IMAGE VIEWER STYLES
+  const naira = n =>
+    '₦' + Number(n || 0).toLocaleString('en-NG');
+
+  // IMAGE FALLBACK
+
+  function createImageFallback(message = 'HOME OF FABRIC') {
+    const placeholder = document.createElement('div');
+
+    placeholder.className = 'hof-image-fallback';
+    placeholder.textContent = message;
+    placeholder.setAttribute('role', 'img');
+    placeholder.setAttribute('aria-label', message);
+
+    return placeholder;
+  }
+
+  function showImageFallback(image, message = 'IMAGE UNAVAILABLE') {
+    if (!image || !image.parentNode) return;
+
+    const placeholder = createImageFallback(message);
+    image.replaceWith(placeholder);
+
+    return placeholder;
+  }
+
+  // MODAL AND IMAGE VIEWER STYLES
 
   const modalStyle = document.createElement('style');
 
   modalStyle.textContent = `
+    .hof-image-fallback {
+      width: 100%;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eee;
+      color: #777;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-align: center;
+      padding: 20px;
+    }
+
     .hof-modal {
       position: fixed;
       inset: 0;
@@ -215,6 +276,7 @@
 
     .hof-modal-order.disabled {
       opacity: .45;
+      cursor: not-allowed;
       pointer-events: none;
     }
 
@@ -227,9 +289,12 @@
 
     .product-card { cursor: pointer; }
 
-    .product-card:focus-visible {
-      outline: 2px solid #111;
-      outline-offset: 4px;
+    .product-card:focus-visible,
+    .hof-modal-close:focus-visible,
+    .hof-lightbox button:focus-visible,
+    .hof-modal-thumbs button:focus-visible {
+      outline: 2px solid #777;
+      outline-offset: 3px;
     }
 
     /* FULL-SCREEN IMAGE VIEWER */
@@ -404,10 +469,13 @@
   modal.setAttribute('role', 'dialog');
   modal.setAttribute('aria-modal', 'true');
   modal.setAttribute('aria-label', 'Product details');
+  modal.setAttribute('aria-hidden', 'true');
 
   modal.innerHTML = `
     <div class="hof-modal-box">
-      <button class="hof-modal-close" type="button" aria-label="Close">&times;</button>
+      <button class="hof-modal-close" type="button" aria-label="Close">
+        &times;
+      </button>
 
       <div class="hof-modal-gallery">
         <img class="hof-modal-main-image" alt="" title="Tap to enlarge image">
@@ -441,6 +509,10 @@
   const lightbox = document.createElement('div');
 
   lightbox.className = 'hof-lightbox';
+  lightbox.setAttribute('role', 'dialog');
+  lightbox.setAttribute('aria-modal', 'true');
+  lightbox.setAttribute('aria-label', 'Product image viewer');
+  lightbox.setAttribute('aria-hidden', 'true');
 
   lightbox.innerHTML = `
     <div class="hof-lightbox-controls">
@@ -473,9 +545,45 @@
   const previousButton = lightbox.querySelector('.hof-lightbox-prev');
   const nextButton = lightbox.querySelector('.hof-lightbox-next');
 
+  function getFocusable(container) {
+    return Array.from(container.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), ' +
+      'select:not([disabled]), textarea:not([disabled]), ' +
+      '[tabindex]:not([tabindex="-1"])'
+    )).filter(element =>
+      element.offsetWidth > 0 ||
+      element.offsetHeight > 0 ||
+      element === document.activeElement
+    );
+  }
+
+  function trapFocus(container, event) {
+    if (event.key !== 'Tab') return;
+
+    const focusable = getFocusable(container);
+
+    if (!focusable.length) {
+      event.preventDefault();
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
   function updateZoom() {
     lightboxImage.style.transform = `scale(${zoomLevel})`;
-    lightboxImage.style.cursor = zoomLevel > 1 ? 'zoom-out' : 'zoom-in';
+    lightboxImage.style.cursor =
+      zoomLevel > 1 ? 'zoom-out' : 'zoom-in';
+
     zoomText.textContent = `${Math.round(zoomLevel * 100)}%`;
   }
 
@@ -487,8 +595,15 @@
   function updateLightboxImage() {
     if (!currentImages.length) return;
 
+    lightboxImage.onerror = () => {
+      lightboxImage.alt = 'Image unavailable';
+      lightboxImage.removeAttribute('src');
+      counter.textContent = 'IMAGE UNAVAILABLE';
+    };
+
     lightboxImage.src = currentImages[currentImageIndex];
-    lightboxImage.alt = `${currentProductName} image ${currentImageIndex + 1}`;
+    lightboxImage.alt =
+      `${currentProductName} image ${currentImageIndex + 1}`;
 
     counter.textContent =
       `${currentImageIndex + 1} / ${currentImages.length}`;
@@ -504,16 +619,35 @@
   function openLightbox() {
     if (!currentImages.length) return;
 
+    lightboxPreviousFocus = document.activeElement;
+
     updateLightboxImage();
+
     lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+
     document.body.style.overflow = 'hidden';
+
+    lightbox.querySelector('.hof-lightbox-close').focus();
   }
 
   function closeLightbox() {
+    if (!lightbox.classList.contains('open')) return;
+
     lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+
     lightboxImage.removeAttribute('src');
+
     document.body.style.overflow =
       modal.classList.contains('open') ? 'hidden' : '';
+
+    if (lightboxPreviousFocus &&
+        lightboxPreviousFocus.isConnected) {
+      lightboxPreviousFocus.focus();
+    }
+
+    lightboxPreviousFocus = null;
   }
 
   function showImage(index) {
@@ -523,15 +657,31 @@
       (index + currentImages.length) % currentImages.length;
 
     const mainImage = modal.querySelector('.hof-modal-main-image');
-    const thumbnails = modal.querySelectorAll('.hof-modal-thumbs button');
+    const thumbnails = modal.querySelectorAll(
+      '.hof-modal-thumbs button'
+    );
+
+    const oldFallback = modal.querySelector(
+      '.hof-modal-gallery .hof-image-fallback'
+    );
+
+    if (oldFallback) oldFallback.remove();
+
+    mainImage.style.display = 'block';
+    mainImage.onerror = () => {
+      showImageFallback(mainImage);
+    };
 
     mainImage.src = currentImages[currentImageIndex];
+    mainImage.alt =
+      `${currentProductName} image ${currentImageIndex + 1}`;
 
     thumbnails.forEach((button, i) => {
       button.classList.toggle('active', i === currentImageIndex);
 
       if (i === currentImageIndex) {
         button.setAttribute('aria-current', 'true');
+
         button.scrollIntoView({
           behavior: 'smooth',
           block: 'nearest',
@@ -559,17 +709,22 @@
     }
   }
 
-  lightbox.querySelector('[data-zoom="in"]').addEventListener('click', () => {
-    setZoom(zoomLevel + 0.5);
-  });
+  // ZOOM CONTROLS
 
-  lightbox.querySelector('[data-zoom="out"]').addEventListener('click', () => {
-    setZoom(zoomLevel - 0.5);
-  });
+  lightbox.querySelector('[data-zoom="in"]')
+    .addEventListener('click', () => {
+      setZoom(zoomLevel + 0.5);
+    });
 
-  lightbox.querySelector('[data-zoom="reset"]').addEventListener('click', () => {
-    setZoom(1);
-  });
+  lightbox.querySelector('[data-zoom="out"]')
+    .addEventListener('click', () => {
+      setZoom(zoomLevel - 0.5);
+    });
+
+  lightbox.querySelector('[data-zoom="reset"]')
+    .addEventListener('click', () => {
+      setZoom(1);
+    });
 
   lightbox.querySelector('.hof-lightbox-close')
     .addEventListener('click', closeLightbox);
@@ -581,8 +736,10 @@
     setZoom(zoomLevel > 1 ? 1 : 2);
   });
 
-  lightbox.addEventListener('click', e => {
-    if (e.target === lightbox) closeLightbox();
+  lightbox.addEventListener('click', event => {
+    if (event.target === lightbox) {
+      closeLightbox();
+    }
   });
 
   // MOBILE SWIPE NAVIGATION
@@ -590,21 +747,26 @@
   let touchStartX = 0;
   let touchStartY = 0;
 
-  lightbox.addEventListener('touchstart', e => {
-    if (!e.touches.length) return;
+  lightbox.addEventListener('touchstart', event => {
+    if (!event.touches.length) return;
 
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
   }, { passive: true });
 
-  lightbox.addEventListener('touchend', e => {
-    if (!e.changedTouches.length || zoomLevel > 1) return;
+  lightbox.addEventListener('touchend', event => {
+    if (!event.changedTouches.length || zoomLevel > 1) return;
 
-    const differenceX = e.changedTouches[0].clientX - touchStartX;
-    const differenceY = e.changedTouches[0].clientY - touchStartY;
+    const differenceX =
+      event.changedTouches[0].clientX - touchStartX;
 
-    if (Math.abs(differenceX) < 50 ||
-        Math.abs(differenceX) < Math.abs(differenceY)) {
+    const differenceY =
+      event.changedTouches[0].clientY - touchStartY;
+
+    if (
+      Math.abs(differenceX) < 50 ||
+      Math.abs(differenceX) < Math.abs(differenceY)
+    ) {
       return;
     }
 
@@ -618,42 +780,71 @@
   // PRODUCT MODAL CONTROLS
 
   function closeModal() {
+    if (!modal.classList.contains('open')) return;
+
     if (lightbox.classList.contains('open')) {
       closeLightbox();
     }
 
     modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+
     document.body.style.overflow = '';
+
+    if (lastFocusedElement &&
+        lastFocusedElement.isConnected) {
+      lastFocusedElement.focus();
+    }
+
+    lastFocusedElement = null;
   }
 
   modal.querySelector('.hof-modal-close')
     .addEventListener('click', closeModal);
 
-  modal.addEventListener('click', e => {
-    if (e.target === modal) closeModal();
+  modal.addEventListener('click', event => {
+    if (event.target === modal) {
+      closeModal();
+    }
   });
 
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', event => {
     if (lightbox.classList.contains('open')) {
-      if (e.key === 'Escape') {
+      trapFocus(lightbox, event);
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
         closeLightbox();
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
         previousImage();
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
         nextImage();
       }
-    } else if (modal.classList.contains('open') && e.key === 'Escape') {
-      closeModal();
+
+      return;
+    }
+
+    if (modal.classList.contains('open')) {
+      trapFocus(modal, event);
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeModal();
+      }
     }
   });
 
   // OPEN PRODUCT DETAILS
 
   function openProduct(p) {
+    lastFocusedElement = document.activeElement;
+
     currentImages = Array.isArray(p.images)
-      ? p.images.filter(Boolean)
+      ? p.images.filter(src =>
+          typeof src === 'string' && src.trim()
+        )
       : [];
 
     currentImageIndex = 0;
@@ -662,8 +853,14 @@
     const mainImage = modal.querySelector('.hof-modal-main-image');
     const thumbs = modal.querySelector('.hof-modal-thumbs');
 
+    const oldFallback = modal.querySelector(
+      '.hof-modal-gallery .hof-image-fallback'
+    );
+
+    if (oldFallback) oldFallback.remove();
+
     mainImage.style.display = currentImages.length ? 'block' : 'none';
-    mainImage.src = currentImages[0] || '';
+    mainImage.removeAttribute('src');
     mainImage.alt = currentProductName;
     mainImage.onclick = openLightbox;
 
@@ -677,7 +874,16 @@
       image.alt = `${currentProductName} image ${index + 1}`;
       image.loading = 'lazy';
 
-      button.setAttribute('aria-label', `View image ${index + 1}`);
+      image.addEventListener('error', () => {
+        image.style.opacity = '.2';
+        image.alt = 'Thumbnail unavailable';
+      });
+
+      button.type = 'button';
+      button.setAttribute(
+        'aria-label',
+        `View image ${index + 1}`
+      );
 
       button.append(image);
 
@@ -688,10 +894,14 @@
       thumbs.append(button);
     });
 
-    thumbs.style.display = currentImages.length > 1 ? 'flex' : 'none';
+    thumbs.style.display =
+      currentImages.length > 1 ? 'flex' : 'none';
 
     if (currentImages.length) {
       showImage(0);
+    } else {
+      const gallery = modal.querySelector('.hof-modal-gallery');
+      gallery.append(createImageFallback());
     }
 
     modal.querySelector('.hof-modal-category').textContent =
@@ -703,19 +913,25 @@
     modal.querySelector('.hof-modal-price').textContent =
       `${naira(p.price)} / ${p.unit || 'item'}`;
 
-    // AVAILABILITY STATUS
+    // AVAILABILITY
 
-    const availability = modal.querySelector('.hof-modal-availability');
+    const availability =
+      modal.querySelector('.hof-modal-availability');
+
     const isAvailable = p.is_available === true;
 
-    availability.textContent = isAvailable ? 'AVAILABLE' : 'OUT OF STOCK';
+    availability.textContent =
+      isAvailable ? 'AVAILABLE' : 'OUT OF STOCK';
 
     availability.className =
       'hof-modal-availability ' +
       (isAvailable ? 'is-available' : 'is-unavailable');
 
     modal.querySelector('.hof-modal-description').textContent =
-      p.description || 'Premium-quality fabric with a smooth, elegant finish — perfect for stylish native outfits.';
+      p.description ||
+      'Premium-quality fabric with a smooth, elegant finish — perfect for stylish native outfits.';
+
+    // WHATSAPP ORDERING
 
     const number = (c.WHATSAPP_NUMBER || '2348087674813')
       .replace(/\D/g, '');
@@ -729,49 +945,79 @@
       `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 
     order.classList.toggle('disabled', !isAvailable);
+
     order.setAttribute(
       'aria-disabled',
       String(!isAvailable)
     );
 
-    order.textContent = isAvailable
-      ? 'ORDER ON WHATSAPP ↗'
-      : 'CURRENTLY UNAVAILABLE';
+    if (isAvailable) {
+      order.textContent = 'ORDER ON WHATSAPP ↗';
+      order.removeAttribute('tabindex');
+    } else {
+      order.textContent = 'CURRENTLY UNAVAILABLE';
+      order.setAttribute('tabindex', '-1');
+      order.removeAttribute('href');
+    }
 
     modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+
     document.body.style.overflow = 'hidden';
+
+    modal.querySelector('.hof-modal-close').focus();
   }
 
   // CATEGORY FILTERS
 
   function renderCats() {
     const box = $('category-chips');
+
+    if (!box) return;
+
     box.replaceChildren();
 
-    ['All', ...new Set(rows.map(p => p.category).filter(Boolean))].forEach(v => {
-      const b = document.createElement('button');
+    const categories = [
+      'All',
+      ...new Set(rows.map(p => p.category).filter(Boolean))
+    ];
 
-      b.className = 'chip' + (category === v ? ' active' : '');
-      b.textContent = v;
+    categories.forEach(value => {
+      const button = document.createElement('button');
 
-      b.onclick = () => {
-        category = v;
+      button.type = 'button';
+      button.className =
+        'chip' + (category === value ? ' active' : '');
+
+      button.textContent = value;
+
+      if (category === value) {
+        button.setAttribute('aria-pressed', 'true');
+      } else {
+        button.setAttribute('aria-pressed', 'false');
+      }
+
+      button.addEventListener('click', () => {
+        category = value;
         renderCats();
         render();
-      };
+      });
 
-      box.append(b);
+      box.append(button);
     });
   }
 
   // PRODUCT CATALOGUE
 
   function render() {
-    const q = $('search').value.trim().toLowerCase();
+    const search = $('search');
+    const q = search ? search.value.trim().toLowerCase() : '';
 
     const items = rows.filter(p =>
       (category === 'All' || p.category === category) &&
-      `${p.name} ${p.category} ${p.description || ''}`.toLowerCase().includes(q)
+      `${p.name || ''} ${p.category || ''} ${p.description || ''}`
+        .toLowerCase()
+        .includes(q)
     );
 
     grid.replaceChildren();
@@ -788,19 +1034,29 @@
       card.className = 'product-card';
       card.tabIndex = 0;
       card.setAttribute('role', 'button');
-      card.setAttribute('aria-label', `View details for ${p.name}`);
+
+      card.setAttribute(
+        'aria-label',
+        `View details for ${p.name || 'HOF product'}`
+      );
 
       const media = document.createElement('div');
       media.className = 'product-image';
 
       if (p.images?.[0]) {
-        const im = document.createElement('img');
+        const image = document.createElement('img');
 
-        im.src = p.images[0];
-        im.alt = p.name;
-        im.loading = 'lazy';
+        image.src = p.images[0];
+        image.alt = p.name || 'HOF product';
+        image.loading = 'lazy';
 
-        media.append(im);
+        image.addEventListener('error', () => {
+          showImageFallback(image);
+        });
+
+        media.append(image);
+      } else {
+        media.append(createImageFallback());
       }
 
       if (p.is_new_arrival) {
@@ -820,16 +1076,20 @@
       cat.textContent = p.category || 'HOF COLLECTION';
 
       const title = document.createElement('h3');
-      title.textContent = p.name;
+      title.textContent = p.name || 'HOF Collection';
 
       const desc = document.createElement('p');
       desc.className = 'product-description';
+
       desc.textContent =
-        p.description || 'Premium-quality fabric with an elegant finish.';
+        p.description ||
+        'Premium-quality fabric with an elegant finish.';
 
       const price = document.createElement('p');
       price.className = 'product-price';
-      price.textContent = `${naira(p.price)} / ${p.unit || 'item'}`;
+
+      price.textContent =
+        `${naira(p.price)} / ${p.unit || 'item'}`;
 
       const link = document.createElement('span');
       link.className = 'text-link';
@@ -838,11 +1098,16 @@
       body.append(cat, title, desc, price, link);
       card.append(media, body);
 
-      card.addEventListener('click', () => openProduct(p));
+      card.addEventListener('click', () => {
+        openProduct(p);
+      });
 
-      card.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
+      card.addEventListener('keydown', event => {
+        if (
+          event.key === 'Enter' ||
+          event.key === ' '
+        ) {
+          event.preventDefault();
           openProduct(p);
         }
       });
@@ -851,24 +1116,45 @@
     });
   }
 
-  $('search').addEventListener('input', render);
+  // SEARCH
+
+  if ($('search')) {
+    $('search').addEventListener('input', render);
+  }
 
   // LOAD PRODUCTS FROM SUPABASE
 
-  db.from('products')
-    .select('id,name,price,category,unit,description,images,is_available,is_new_arrival,created_at')
-    .eq('is_available', true)
-    .order('created_at', { ascending: false })
-    .then(({ data, error }) => {
+  async function loadProducts() {
+    status.textContent = 'Loading our collection...';
+
+    try {
+      const { data, error } = await db
+        .from('products')
+        .select(
+          'id,name,price,category,unit,description,images,is_available,is_new_arrival,created_at'
+        )
+        .eq('is_available', true)
+        .order('created_at', { ascending: false });
+
       if (error) {
-        status.textContent = 'Unable to load the collection. Please try again later.';
-        console.error(error);
-        return;
+        throw error;
       }
 
       rows = data || [];
 
       renderCats();
       render();
-    });
+
+    } catch (error) {
+      console.error('HOF catalogue loading error:', error);
+
+      status.textContent =
+        'Unable to load the collection. Please check your internet connection and try again.';
+
+      grid.replaceChildren();
+    }
+  }
+
+  loadProducts();
+
 })();
