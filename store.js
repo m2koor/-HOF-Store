@@ -2,6 +2,20 @@
   'use strict';
 
   const c = window.HOF_CONFIG || {};
+  // GOOGLE ANALYTICS: WHATSAPP CLICK TRACKING
+document.addEventListener('click', event => {
+  const link = event.target.closest('a[href*="wa.me/"]');
+
+  if (!link) return;
+
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', 'whatsapp_click', {
+      event_category: 'engagement',
+      event_label: link.href,
+      transport_type: 'beacon'
+    });
+  }
+});
   const $ = id => document.getElementById(id);
 
   const grid = $('product-grid');
