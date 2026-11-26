@@ -9,6 +9,7 @@
   --admin-grey: #777;
   --admin-border: #e5e5e2;
   --admin-background: #f5f5f3;
+  --admin-soft: #fafaf9;
   --admin-serif: "Playfair Display", Georgia, serif;
   --admin-sans: "DM Sans", Arial, sans-serif;
 }
@@ -46,6 +47,11 @@
   display: none !important;
 }
 
+.admin-page ::selection {
+  background: var(--admin-black);
+  color: var(--admin-white);
+}
+
 /* ACCESSIBILITY */
 
 .admin-page a:focus-visible,
@@ -55,11 +61,6 @@
 .admin-page textarea:focus-visible {
   outline: 2px solid var(--admin-black);
   outline-offset: 3px;
-}
-
-.admin-page ::selection {
-  background: var(--admin-black);
-  color: var(--admin-white);
 }
 
 /* HEADER */
@@ -83,6 +84,7 @@
   text-decoration: none;
   font-family: var(--admin-serif);
   font-size: 23px;
+  min-width: 0;
 }
 
 .admin-page .brand span {
@@ -211,7 +213,7 @@
 
 .admin-page .admin-form input[type="file"] {
   padding: 11px;
-  background: #fafafa;
+  background: var(--admin-soft);
   font-size: 12px;
 }
 
@@ -363,6 +365,79 @@
   object-fit: cover;
 }
 
+/* PRODUCT GALLERY */
+
+.admin-page .admin-product-gallery {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.admin-page .admin-product-gallery img {
+  display: block;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 2px;
+  background: #f1f1f1;
+}
+
+.admin-page .admin-product-gallery img.image-unavailable {
+  border: 1px dashed #aaa;
+}
+
+.admin-page .admin-image-count {
+  display: block;
+  margin-top: 7px;
+  font-size: 11px;
+  color: #666;
+}
+
+.admin-page .admin-product-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.admin-page .admin-product-price {
+  font-weight: 600;
+}
+
+.admin-page .admin-product-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.admin-page .admin-product-badge {
+  display: inline-block;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  font-size: 10px;
+  letter-spacing: .04em;
+}
+
+.admin-page .admin-product-description {
+  color: #666;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* PRODUCT CARD */
+
+.admin-page .admin-product {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--admin-border);
+  background: var(--admin-white);
+}
+
+.admin-page .admin-product button {
+  max-width: 100%;
+}
+
 /* FOOTER */
 
 .admin-page .site-footer {
@@ -381,6 +456,10 @@
 @media (max-width: 900px) {
   .admin-page .admin-wrap {
     width: min(100% - 30px, 1050px);
+  }
+
+  .admin-page .admin-products {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -456,6 +535,16 @@
     gap: 16px;
   }
 
+  .admin-page .admin-product {
+    gap: 12px;
+    padding: 13px;
+  }
+
+  .admin-page .admin-product-gallery img {
+    width: 76px;
+    height: 76px;
+  }
+
   .admin-page .checks {
     gap: 17px;
   }
@@ -488,6 +577,10 @@
     letter-spacing: .7px;
   }
 
+  .admin-page .site-header nav {
+    gap: 7px;
+  }
+
   .admin-page .site-header nav a {
     font-size: 7px;
   }
@@ -506,70 +599,5 @@
     scroll-behavior: auto !important;
     transition-duration: .01ms !important;
     animation-duration: .01ms !important;
-  }
-}
-.admin-product-gallery {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.admin-product-gallery img {
-  display: block;
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 4px;
-  background: #f1f1f1;
-}
-
-.admin-product-gallery img.image-unavailable {
-  border: 1px dashed #aaa;
-}
-
-.admin-image-count {
-  display: block;
-  margin-top: 5px;
-  font-size: 11px;
-  color: #666;
-}
-
-.admin-product-info {
-  min-width: 0;
-  flex: 1;
-}
-
-.admin-product-price {
-  font-weight: 600;
-}
-
-.admin-product-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 8px 0;
-}
-
-.admin-product-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border: 1px solid #ccc;
-  font-size: 11px;
-  letter-spacing: .04em;
-}
-
-.admin-product-description {
-  color: #666;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-@media (max-width: 600px) {
-  .admin-product-gallery img {
-    width: 76px;
-    height: 76px;
-  }
-
-  .admin-product {
-    gap: 12px;
   }
 }
