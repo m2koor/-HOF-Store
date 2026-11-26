@@ -25,7 +25,7 @@
 
   const naira = n => '₦' + Number(n || 0).toLocaleString('en-NG');
 
-  // PRODUCT AND IMAGE VIEWER STYLES
+  // PRODUCT DETAILS AND IMAGE VIEWER STYLES
 
   const modalStyle = document.createElement('style');
 
@@ -34,12 +34,13 @@
       position: fixed;
       inset: 0;
       z-index: 9999;
-      background: rgba(0,0,0,.82);
+      background: rgba(0,0,0,.86);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 18px;
       overflow-y: auto;
+      backdrop-filter: blur(5px);
     }
 
     .hof-modal.open { display: flex; }
@@ -48,17 +49,20 @@
       background: #fff;
       color: #111;
       width: 100%;
-      max-width: 760px;
-      max-height: 92vh;
+      max-width: 820px;
+      max-height: 94vh;
       overflow-y: auto;
       position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
     }
 
     .hof-modal-close {
       position: absolute;
       top: 12px;
       right: 12px;
-      z-index: 2;
+      z-index: 5;
       width: 42px;
       height: 42px;
       border: 0;
@@ -68,20 +72,27 @@
       cursor: pointer;
     }
 
+    .hof-modal-gallery {
+      background: #f5f5f5;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
     .hof-modal-main-image {
       width: 100%;
-      height: 65vh;
-      max-height: 650px;
+      height: 500px;
+      max-height: 65vh;
       object-fit: contain;
       display: block;
-      background: #f5f5f5;
       cursor: zoom-in;
     }
 
     .hof-modal-thumbs {
       display: flex;
       gap: 8px;
-      padding: 12px 20px 0;
+      padding: 12px 14px 16px;
       overflow-x: auto;
     }
 
@@ -90,9 +101,9 @@
       border: 2px solid #ddd;
       background: white;
       cursor: pointer;
-      flex: 0 0 65px;
-      height: 65px;
-      opacity: .65;
+      flex: 0 0 62px;
+      height: 62px;
+      opacity: .6;
       transition: .2s ease;
     }
 
@@ -107,41 +118,111 @@
       object-fit: cover;
     }
 
-    .hof-modal-content { padding: 24px; }
+    .hof-modal-content {
+      padding: 55px 30px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .hof-modal-brand {
+      font-size: 10px;
+      letter-spacing: 3px;
+      font-weight: 700;
+      margin: 0 0 22px;
+      color: #777;
+    }
+
+    .hof-modal-category {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #777;
+      margin: 0 0 10px;
+    }
 
     .hof-modal-content h2 {
       font-family: 'Playfair Display', serif;
       font-size: 30px;
-      margin: 8px 0;
-    }
-
-    .hof-modal-category {
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      line-height: 1.25;
+      margin: 0 0 16px;
+      overflow-wrap: anywhere;
     }
 
     .hof-modal-price {
-      font-size: 21px;
+      font-size: 23px;
       font-weight: 700;
-      margin: 18px 0;
+      margin: 0 0 18px;
+    }
+
+    .hof-modal-availability {
+      display: inline-block;
+      align-self: flex-start;
+      padding: 8px 12px;
+      margin: 0 0 20px;
+      border: 1px solid #111;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+
+    .hof-modal-availability.is-available {
+      background: #111;
+      color: #fff;
+    }
+
+    .hof-modal-availability.is-unavailable {
+      background: #eee;
+      color: #666;
+      border-color: #bbb;
+    }
+
+    .hof-modal-divider {
+      width: 45px;
+      height: 1px;
+      background: #111;
+      margin: 0 0 20px;
     }
 
     .hof-modal-description {
       line-height: 1.8;
       color: #555;
+      font-size: 13px;
       white-space: pre-wrap;
+      margin: 0;
     }
 
     .hof-modal-order {
-      display: inline-block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: #111;
       color: white;
-      padding: 15px 22px;
+      padding: 17px 18px;
       text-decoration: none;
-      margin-top: 18px;
-      font-size: 12px;
-      letter-spacing: 1px;
+      margin-top: 28px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-align: center;
+      transition: .2s ease;
+    }
+
+    .hof-modal-order:hover {
+      background: #333;
+    }
+
+    .hof-modal-order.disabled {
+      opacity: .45;
+      pointer-events: none;
+    }
+
+    .hof-modal-note {
+      font-size: 10px;
+      color: #888;
+      line-height: 1.6;
+      margin-top: 13px;
     }
 
     .product-card { cursor: pointer; }
@@ -251,12 +332,41 @@
     }
 
     @media(max-width:600px) {
-      .hof-modal-main-image {
-        height: 55vh;
-        max-height: 480px;
+      .hof-modal {
+        padding: 10px;
+        align-items: center;
       }
 
-      .hof-modal-content h2 { font-size: 25px; }
+      .hof-modal-box {
+        max-width: 440px;
+        max-height: 94vh;
+        display: block;
+      }
+
+      .hof-modal-main-image {
+        height: 38vh;
+        max-height: 340px;
+      }
+
+      .hof-modal-content {
+        padding: 24px 20px 25px;
+      }
+
+      .hof-modal-brand {
+        margin-bottom: 13px;
+      }
+
+      .hof-modal-content h2 {
+        font-size: 25px;
+      }
+
+      .hof-modal-price {
+        font-size: 21px;
+      }
+
+      .hof-modal-order {
+        margin-top: 22px;
+      }
 
       .hof-lightbox {
         padding: 70px 8px 15px;
@@ -270,7 +380,10 @@
       .hof-lightbox-prev { left: 5px; }
       .hof-lightbox-next { right: 5px; }
 
-      .hof-lightbox-controls { left: 8px; gap: 4px; }
+      .hof-lightbox-controls {
+        left: 8px;
+        gap: 4px;
+      }
 
       .hof-lightbox-controls button {
         min-width: 38px;
@@ -296,18 +409,27 @@
     <div class="hof-modal-box">
       <button class="hof-modal-close" type="button" aria-label="Close">&times;</button>
 
-      <img class="hof-modal-main-image" alt="" title="Tap to enlarge image">
-
-      <div class="hof-modal-thumbs"></div>
+      <div class="hof-modal-gallery">
+        <img class="hof-modal-main-image" alt="" title="Tap to enlarge image">
+        <div class="hof-modal-thumbs"></div>
+      </div>
 
       <div class="hof-modal-content">
+        <p class="hof-modal-brand">HOME OF FABRIC</p>
         <p class="hof-modal-category"></p>
         <h2></h2>
         <p class="hof-modal-price"></p>
+        <p class="hof-modal-availability"></p>
+        <div class="hof-modal-divider"></div>
         <p class="hof-modal-description"></p>
+
         <a class="hof-modal-order" target="_blank" rel="noopener">
           ORDER ON WHATSAPP ↗
         </a>
+
+        <p class="hof-modal-note">
+          Luxury in Every Thread. Contact us for availability and ordering details.
+        </p>
       </div>
     </div>
   `;
@@ -383,7 +505,6 @@
     if (!currentImages.length) return;
 
     updateLightboxImage();
-
     lightbox.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -523,7 +644,6 @@
         e.preventDefault();
         nextImage();
       }
-
     } else if (modal.classList.contains('open') && e.key === 'Escape') {
       closeModal();
     }
@@ -545,7 +665,6 @@
     mainImage.style.display = currentImages.length ? 'block' : 'none';
     mainImage.src = currentImages[0] || '';
     mainImage.alt = currentProductName;
-
     mainImage.onclick = openLightbox;
 
     thumbs.replaceChildren();
@@ -569,6 +688,8 @@
       thumbs.append(button);
     });
 
+    thumbs.style.display = currentImages.length > 1 ? 'flex' : 'none';
+
     if (currentImages.length) {
       showImage(0);
     }
@@ -576,22 +697,46 @@
     modal.querySelector('.hof-modal-category').textContent =
       p.category || 'HOF COLLECTION';
 
-    modal.querySelector('.hof-modal-content h2').textContent = p.name || '';
+    modal.querySelector('.hof-modal-content h2').textContent =
+      p.name || 'HOF Collection';
 
     modal.querySelector('.hof-modal-price').textContent =
       `${naira(p.price)} / ${p.unit || 'item'}`;
 
-    modal.querySelector('.hof-modal-description').textContent =
-      p.description || 'Premium-quality fabric with an elegant finish.';
+    // AVAILABILITY STATUS
 
-    const number = (c.WHATSAPP_NUMBER || '2348087674813').replace(/\D/g, '');
+    const availability = modal.querySelector('.hof-modal-availability');
+    const isAvailable = p.is_available === true;
+
+    availability.textContent = isAvailable ? 'AVAILABLE' : 'OUT OF STOCK';
+
+    availability.className =
+      'hof-modal-availability ' +
+      (isAvailable ? 'is-available' : 'is-unavailable');
+
+    modal.querySelector('.hof-modal-description').textContent =
+      p.description || 'Premium-quality fabric with a smooth, elegant finish — perfect for stylish native outfits.';
+
+    const number = (c.WHATSAPP_NUMBER || '2348087674813')
+      .replace(/\D/g, '');
 
     const message =
       `Hello HOF, I am interested in ${p.name}. Please share availability and ordering details.`;
 
     const order = modal.querySelector('.hof-modal-order');
 
-    order.href = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+    order.href =
+      `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+
+    order.classList.toggle('disabled', !isAvailable);
+    order.setAttribute(
+      'aria-disabled',
+      String(!isAvailable)
+    );
+
+    order.textContent = isAvailable
+      ? 'ORDER ON WHATSAPP ↗'
+      : 'CURRENTLY UNAVAILABLE';
 
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
