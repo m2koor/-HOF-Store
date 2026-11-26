@@ -1,578 +1,361 @@
-/* =========================================
-   HOF — HOME OF FABRIC
-   ADMIN DASHBOARD STYLES
-========================================= */
-
-:root {
-  --admin-black: #111;
-  --admin-white: #fff;
-  --admin-grey: #777;
-  --admin-border: #e5e5e2;
-  --admin-background: #f5f5f3;
-  --admin-soft: #fafaf9;
-  --admin-serif: "Playfair Display", Georgia, serif;
-  --admin-sans: "DM Sans", Arial, sans-serif;
-}
-
-.admin-page,
-.admin-page * {
-  box-sizing: border-box;
-}
-
-.admin-page {
-  margin: 0;
-  min-height: 100vh;
-  background: var(--admin-background);
-  color: var(--admin-black);
-  font-family: var(--admin-sans);
-  -webkit-font-smoothing: antialiased;
-}
-
-.admin-page button,
-.admin-page input,
-.admin-page select,
-.admin-page textarea {
-  font: inherit;
-}
-
-.admin-page button {
-  cursor: pointer;
-}
-
-.admin-page a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.admin-page .hidden {
-  display: none !important;
-}
-
-/* ACCESSIBILITY */
-
-.admin-page a:focus-visible,
-.admin-page button:focus-visible,
-.admin-page input:focus-visible,
-.admin-page select:focus-visible,
-.admin-page textarea:focus-visible {
-  outline: 2px solid var(--admin-black);
-  outline-offset: 3px;
-}
-
-/* HEADER */
-
-.admin-page .admin-header {
-  min-height: 78px;
-  padding: 14px clamp(18px, 6vw, 85px);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  background: var(--admin-white);
-  border-bottom: 1px solid var(--admin-border);
-}
-
-.admin-page .admin-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-
-.admin-page .admin-brand-mark {
-  font-family: var(--admin-serif);
-  font-size: 28px;
-  font-weight: 600;
-  letter-spacing: -1px;
-}
-
-.admin-page .admin-brand-name {
-  padding-left: 12px;
-  border-left: 1px solid var(--admin-border);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
-.admin-page .view-store {
-  padding: 11px 15px;
-  border: 1px solid var(--admin-black);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.3px;
-  transition: .2s;
-}
-
-.admin-page .view-store:hover {
-  background: var(--admin-black);
-  color: var(--admin-white);
-}
-
-/* MAIN LAYOUT */
-
-.admin-page .admin-wrap {
-  width: min(100% - 36px, 1050px);
-  margin: 55px auto 80px;
-}
-
-.admin-page .admin-panel {
-  padding: clamp(22px, 4vw, 38px);
-  margin-bottom: 28px;
-  background: var(--admin-white);
-  border: 1px solid var(--admin-border);
-}
-
-/* TEXT */
-
-.admin-page .eyebrow {
-  margin: 0 0 15px;
-  color: var(--admin-grey);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-}
-
-.admin-page h1 {
-  margin: 10px 0 14px;
-  font: 500 clamp(32px, 5vw, 46px)/1.15 var(--admin-serif);
-  letter-spacing: -1px;
-}
-
-.admin-page h2 {
-  margin: 0 0 24px;
-  font: 500 27px/1.2 var(--admin-serif);
-}
-
-.admin-page .muted {
-  color: var(--admin-grey);
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-/* FORMS */
-
-.admin-page .admin-form {
-  display: flex;
-  flex-direction: column;
-  gap: 17px;
-  margin-top: 25px;
-}
-
-.admin-page .admin-form label {
-  color: #333;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.admin-page .admin-form .field {
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  min-width: 0;
-}
-
-.admin-page .admin-form input:not([type="checkbox"]),
-.admin-page .admin-form select,
-.admin-page .admin-form textarea {
-  width: 100%;
-  min-width: 0;
-  min-height: 46px;
-  padding: 12px 14px;
-  border: 1px solid #d8d8d5;
-  border-radius: 0;
-  background: var(--admin-white);
-  color: var(--admin-black);
-  font-size: 14px;
-  transition: border-color .2s;
-}
-
-.admin-page .admin-form input:focus,
-.admin-page .admin-form select:focus,
-.admin-page .admin-form textarea:focus {
-  outline: none;
-  border-color: var(--admin-black);
-}
-
-.admin-page .admin-form textarea {
-  min-height: 110px;
-  resize: vertical;
-  line-height: 1.7;
-}
-
-.admin-page .admin-form input[type="file"] {
-  padding: 11px;
-  background: var(--admin-soft);
-  font-size: 12px;
-}
-
-.admin-page .admin-form input[type="file"]::file-selector-button {
-  margin-right: 12px;
-  padding: 8px 12px;
-  border: 1px solid var(--admin-black);
-  background: var(--admin-black);
-  color: var(--admin-white);
-  font-size: 10px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.admin-page .admin-form small {
-  color: var(--admin-grey);
-  font-size: 11px;
-  line-height: 1.7;
-}
-
-/* FORM GRID */
-
-.admin-page .form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
-}
-
-.admin-page .form-grid .full {
-  grid-column: 1 / -1;
-}
-
-/* CHECKBOXES */
-
-.admin-page .checks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 25px;
-  margin: 15px 0;
-}
-
-.admin-page .checks label {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.admin-page .checks input {
-  width: 17px;
-  height: 17px;
-  accent-color: var(--admin-black);
-}
-
-/* DASHBOARD TITLE */
-
-.admin-page .admin-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 25px;
-}
-
-.admin-page .admin-title h1,
-.admin-page .admin-title h2 {
-  margin-bottom: 0;
-}
-
-/* BUTTONS */
-
-.admin-page .button,
-.admin-page .outline-button {
-  min-height: 44px;
-  padding: 13px 20px;
-  border-radius: 0;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  transition: background .2s, color .2s;
-}
-
-.admin-page .button-dark {
-  border: 1px solid var(--admin-black);
-  background: var(--admin-black);
-  color: var(--admin-white);
-}
-
-.admin-page .button-dark:hover {
-  background: #444;
-}
-
-.admin-page .outline-button {
-  border: 1px solid var(--admin-black);
-  background: var(--admin-white);
-  color: var(--admin-black);
-}
-
-.admin-page .outline-button:hover {
-  background: var(--admin-black);
-  color: var(--admin-white);
-}
-
-.admin-page button:disabled {
-  opacity: .55;
-  cursor: not-allowed;
-}
-
-.admin-page .admin-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-/* STATUS MESSAGES */
-
-.admin-page .status {
-  min-height: 18px;
-  margin: 20px 0 0;
-  color: var(--admin-grey);
-  font-size: 12px;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
-}
-
-/* PRODUCT CATALOGUE */
-
-.admin-page .admin-products {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-}
-
-.admin-page .admin-product {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  min-width: 0;
-  padding: 16px;
-  border: 1px solid var(--admin-border);
-  background: var(--admin-white);
-}
-
-.admin-page .admin-product-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.admin-page .admin-product-info h3 {
-  margin: 0 0 9px;
-  font: 500 19px/1.3 var(--admin-serif);
-  overflow-wrap: anywhere;
-}
-
-.admin-page .admin-product-price {
-  margin: 7px 0;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.admin-page .admin-product-description {
-  color: var(--admin-grey);
-  font-size: 12px;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
-}
-
-.admin-page .admin-product-gallery {
-  flex-shrink: 0;
-}
-
-.admin-page .admin-product-gallery img {
-  display: block;
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  background: #f1f1f1;
-  border-radius: 2px;
-}
-
-.admin-page .admin-product-gallery img.image-unavailable {
-  border: 1px dashed #aaa;
-}
-
-.admin-page .admin-image-count {
-  display: block;
-  margin-top: 7px;
-  color: var(--admin-grey);
-  font-size: 10px;
-}
-
-.admin-page .admin-product-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 9px 0;
-}
-
-.admin-page .admin-product-badge {
-  display: inline-block;
-  padding: 5px 8px;
-  border: 1px solid #ccc;
-  font-size: 9px;
-  letter-spacing: .5px;
-}
-
-.admin-page .admin-product button {
-  max-width: 100%;
-}
-
-/* FOOTER */
-
-.admin-page .admin-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 28px 20px;
-  border-top: 1px solid var(--admin-border);
-  background: var(--admin-white);
-  color: var(--admin-black);
-  text-align: center;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-}
-
-.admin-page .admin-footer span {
-  color: var(--admin-grey);
-  font-family: var(--admin-serif);
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: .5px;
-}
-
-/* TABLET */
-
-@media (max-width: 900px) {
-  .admin-page .admin-products {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* MOBILE */
-
-@media (max-width: 640px) {
-  .admin-page .admin-header {
-    min-height: 70px;
-    padding: 12px 15px;
-  }
-
-  .admin-page .admin-brand {
-    gap: 8px;
-  }
-
-  .admin-page .admin-brand-mark {
-    font-size: 23px;
-  }
-
-  .admin-page .admin-brand-name {
-    padding-left: 8px;
-    font-size: 7px;
-    letter-spacing: 1px;
-  }
-
-  .admin-page .view-store {
-    padding: 10px;
-    font-size: 8px;
-  }
-
-  .admin-page .admin-wrap {
-    width: calc(100% - 28px);
-    margin: 32px auto 55px;
-  }
-
-  .admin-page .admin-panel {
-    padding: 20px 16px;
-    margin-bottom: 18px;
-  }
-
-  .admin-page h1 {
-    font-size: 32px;
-  }
-
-  .admin-page h2 {
-    font-size: 24px;
-  }
-
-  .admin-page .form-grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .admin-page .form-grid .full {
-    grid-column: auto;
-  }
-
-  .admin-page .admin-title {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .admin-page .admin-actions {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .admin-page .admin-actions button {
-    width: 100%;
-  }
-
-  .admin-page .admin-products {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .admin-page .admin-product {
-    gap: 12px;
-    padding: 13px;
-  }
-
-  .admin-page .admin-product-gallery img {
-    width: 76px;
-    height: 76px;
-  }
-
-  .admin-page .checks {
-    gap: 17px;
-  }
-
-  .admin-page .admin-form input:not([type="checkbox"]),
-  .admin-page .admin-form select,
-  .admin-page .admin-form textarea {
-    font-size: 16px;
-  }
-}
-
-/* SMALL MOBILE */
-
-@media (max-width: 380px) {
-  .admin-page .admin-header {
-    padding: 12px 10px;
-    gap: 8px;
-  }
-
-  .admin-page .admin-brand-name {
-    font-size: 6px;
-    letter-spacing: .6px;
-  }
-
-  .admin-page .view-store {
-    padding: 9px 7px;
-    font-size: 7px;
-  }
-
-  .admin-page .admin-wrap {
-    width: calc(100% - 22px);
-  }
-}
-
-/* REDUCED MOTION */
-
-@media (prefers-reduced-motion: reduce) {
-  .admin-page *,
-  .admin-page *::before,
-  .admin-page *::after {
-    scroll-behavior: auto !important;
-    transition-duration: .01ms !important;
-    animation-duration: .01ms !important;
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111111">
+
+  <title>HOF | Admin Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Admin Stylesheet -->
+  <link rel="stylesheet" href="admin.css">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Supabase Configuration -->
+  <script src="config.js"></script>
+
+  <!-- Admin JavaScript -->
+  <script defer src="admin.js"></script>
+</head>
+
+<body class="admin-page">
+
+  <!-- HEADER -->
+  <header class="admin-header">
+
+    <a class="admin-brand" href="index.html" aria-label="HOF Home of Fabric">
+      <span class="admin-brand-mark">HOF</span>
+      <span class="admin-brand-name">HOME OF FABRIC</span>
+    </a>
+
+    <a class="view-store" href="index.html">
+      VIEW STORE ↗
+    </a>
+
+  </header>
+
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-wrap">
+
+    <!-- ADMIN LOGIN -->
+    <section id="login-panel" class="admin-panel">
+
+      <p class="eyebrow">PRIVATE MANAGEMENT</p>
+
+      <h1>Admin Sign In</h1>
+
+      <p class="muted">
+        Authorised HOF administrator access only.
+      </p>
+
+      <form id="login-form" class="admin-form">
+
+        <label for="email">Email</label>
+
+        <input
+          id="email"
+          type="email"
+          autocomplete="username"
+          placeholder="Enter your email"
+          required
+        >
+
+        <label for="password">Password</label>
+
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Enter your password"
+          required
+        >
+
+        <button
+          class="button button-dark"
+          id="login-button"
+          type="submit"
+        >
+          SIGN IN
+        </button>
+
+      </form>
+
+      <p
+        id="login-message"
+        class="status"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+    </section>
+
+
+    <!-- ADMIN DASHBOARD -->
+    <section id="dashboard" class="hidden">
+
+      <!-- DASHBOARD HEADING -->
+      <div class="admin-title">
+
+        <div>
+          <p class="eyebrow">PRIVATE MANAGEMENT</p>
+          <h1>Product Dashboard</h1>
+        </div>
+
+        <button
+          id="logout"
+          class="outline-button"
+          type="button"
+        >
+          SIGN OUT
+        </button>
+
+      </div>
+
+
+      <!-- ADD / EDIT PRODUCT -->
+      <section class="admin-panel">
+
+        <h2 id="form-title">Add a Product</h2>
+
+        <form id="product-form" class="admin-form">
+
+          <input type="hidden" id="product-id">
+
+          <div class="form-grid">
+
+            <!-- PRODUCT NAME -->
+            <div class="field">
+
+              <label for="name">Product Name</label>
+
+              <input
+                id="name"
+                type="text"
+                maxlength="120"
+                placeholder="Enter product name"
+                required
+              >
+
+            </div>
+
+
+            <!-- PRICE -->
+            <div class="field">
+
+              <label for="price">Price (₦)</label>
+
+              <input
+                id="price"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="Enter price"
+                required
+              >
+
+            </div>
+
+
+            <!-- PRODUCT CATEGORY -->
+            <div class="field">
+
+              <label for="category">Category</label>
+
+              <select id="category" required>
+
+                <option value="">Choose category</option>
+
+                <option value="Men Lace">Men Lace</option>
+
+                <option value="Swiss Collection">Swiss Collection</option>
+
+                <option value="Filtex/Atiku Collection">
+                  Filtex/Atiku Collection
+                </option>
+
+                <option value="Getzner">Getzner</option>
+
+                <option value="Shadda">Shadda</option>
+
+                <option value="Wagambari">Wagambari</option>
+
+                <option value="Wool Collection">Wool Collection</option>
+
+                <option value="VIP Collection">VIP Collection</option>
+
+                <option value="Men's Caps">Men's Caps</option>
+
+                <option value="Men Shoes">Men Shoes</option>
+
+                <option value="Fabrics">Fabrics</option>
+
+              </select>
+
+            </div>
+
+
+            <!-- PRICE UNIT -->
+            <div class="field">
+
+              <label for="unit">Price Unit</label>
+
+              <select id="unit">
+
+                <option value="yard">Per yard</option>
+                <option value="set">Per set</option>
+                <option value="piece">Per piece</option>
+                <option value="item">Per item</option>
+
+              </select>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+            <div class="field full">
+
+              <label for="description">Description</label>
+
+              <textarea
+                id="description"
+                rows="4"
+                placeholder="Enter product description"
+              ></textarea>
+
+            </div>
+
+
+            <!-- PRODUCT PHOTOS -->
+            <div class="field full">
+
+              <label for="images">Product Photos</label>
+
+              <input
+                id="images"
+                type="file"
+                accept="image/*"
+                multiple
+              >
+
+              <small>
+                New photos are added to existing photos when editing.
+                Maximum 10 MB each.
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <!-- AVAILABILITY -->
+          <div class="checks">
+
+            <label for="available">
+              <input
+                id="available"
+                type="checkbox"
+                checked
+              >
+              Available
+            </label>
+
+            <label for="new-arrival">
+              <input
+                id="new-arrival"
+                type="checkbox"
+              >
+              New Arrival
+            </label>
+
+          </div>
+
+
+          <!-- FORM ACTIONS -->
+          <div class="admin-actions">
+
+            <button
+              class="button button-dark"
+              id="save-button"
+              type="submit"
+            >
+              SAVE PRODUCT
+            </button>
+
+            <button
+              class="outline-button hidden"
+              id="cancel-edit"
+              type="button"
+            >
+              CANCEL EDIT
+            </button>
+
+          </div>
+
+        </form>
+
+        <p
+          id="form-message"
+          class="status"
+          role="status"
+          aria-live="polite"
+        ></p>
+
+      </section>
+
+
+      <!-- PRODUCT CATALOGUE -->
+      <section class="admin-panel">
+
+        <div class="admin-title">
+
+          <h2>Your Catalogue</h2>
+
+          <button
+            id="refresh"
+            class="outline-button"
+            type="button"
+          >
+            REFRESH
+          </button>
+
+        </div>
+
+        <div id="product-list" class="admin-products"></div>
+
+        <p
+          id="list-message"
+          class="status"
+          role="status"
+          aria-live="polite"
+        ></p>
+
+      </section>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="admin-footer">
+
+    HOF · HOME OF FABRIC
+
+    <span>Luxury in Every Thread</span>
+
+  </footer>
+
+</body>
+</html>
